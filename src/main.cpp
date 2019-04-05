@@ -41,32 +41,31 @@ void handle_movement () {
 
 }
 
+void click(){
+  digitalWrite(statePin, LOW);
+  delay(VELOCIDAD_CLICK);
+  digitalWrite(statePin, HIGH);
+  delay(VELOCIDAD_CLICK);
+  digitalWrite(statePin, LOW);
+}
+
 void setup(){
 
   Serial.begin(115200);
   Serial.println("Setup");
   pinMode(statePin, OUTPUT);
-  pinMode(interrupPin, INPUT);
+  pinMode(interrupPin, INPUT_PULLUP);
   /// interrupt and ticker settings
   attachInterrupt(digitalPinToInterrupt(interrupPin), handleInterrupts, FALLING);
   handleMicrowave.start();
-}
-
-
-void click(){
-  digitalWrite(statePin, HIGH);
-  delay(VELOCIDAD_CLICK);
-  digitalWrite(statePin, LOW);
-  delay(VELOCIDAD_CLICK);
-  digitalWrite(statePin, HIGH);
+  click();
+  delay(100);
 }
 
 //-----------
 void loop() {
-
   Serial.println(interruptCounter);
   handleMicrowave.update();
-  digitalWrite(statePin, sensor_state);
 
   if(sensor_state == HIGH) {
     click();
